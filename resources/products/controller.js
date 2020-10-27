@@ -1,17 +1,16 @@
 const { CREATED, NO_CONTENT } = require("http-status-codes");
-const mongoose = require("mongoose");
 
 const create = async ({ ctx }) => {
   const {
     request: {
-      body: { title, videoId, fileUrl },
+      body: { reference, videoId, fileUrl },
     },
     state: { organization },
     models: { Product },
   } = ctx;
 
   const product = new Product({
-    title,
+    reference,
     videoId,
     fileUrl,
     organizationId: organization._id,
@@ -70,6 +69,7 @@ const list = async ({ ctx }) => {
 const findOnePublic = async ({ ctx }) => {
   ctx.body = ctx.state.requestedProduct;
 };
+
 exports.controller = {
   create,
   update,

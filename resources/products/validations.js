@@ -14,7 +14,7 @@ const create = async ({ ctx }) => {
 
   await yup
     .object({
-      title: yup.string().required(ERROR_TITLE_IS_REQUIRED),
+      reference: yup.string().required(ERROR_TITLE_IS_REQUIRED),
       videoId: yup.string().required(ERROR_VIDEO_ID_IS_REQUIRED),
       fileUrl: yup.string().required(ERROR_FILE_URL_IS_REQUIRED),
     })
@@ -33,9 +33,9 @@ const update = async ({ ctx }) => {
 
   await yup
     .object({
-      title: yup.string().required(ERROR_TITLE_IS_REQUIRED),
-      video: yup.string().required(ERROR_VIDEO_IS_REQUIRED),
-      file: yup.string().required(ERROR_FILE_IS_REQUIRED),
+      reference: yup.string().required(ERROR_TITLE_IS_REQUIRED),
+      videoId: yup.string().required(ERROR_VIDEO_IS_REQUIRED),
+      fileUrl: yup.string().required(ERROR_FILE_IS_REQUIRED),
     })
     .validate(values, { abortEarly: false })
     .catch((err) => {

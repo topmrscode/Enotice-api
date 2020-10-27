@@ -7,7 +7,7 @@ const transformProduct = (_doc, ret) => {
 
 const productSchema = new Schema(
   {
-    title: { type: String },
+    reference: { type: String },
     videoId: { type: String },
     fileUrl: { type: String },
     organizationId: {
