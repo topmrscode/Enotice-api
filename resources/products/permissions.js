@@ -8,10 +8,16 @@ const checkConnectedUser = ({ ctx }) => {
   return true;
 };
 
-const logout = checkConnectedUser;
-const fetchMe = checkConnectedUser;
+const create = checkConnectedUser;
+const update = checkConnectedUser;
+const remove = checkConnectedUser;
+const findOne = checkConnectedUser;
+const list = checkConnectedUser;
 
 exports.permissions = {
-  logout,
-  fetchMe,
+  create,
+  update,
+  remove,
+  findOne,
+  list,
 };

@@ -1,7 +1,6 @@
 const organizations = require("./organizations");
 const sessions = require("./sessions");
-
-// const products = require("./products");
+const products = require("./products");
 
 module.exports = (app) => {
   app.context.permissions = {};
@@ -11,6 +10,5 @@ module.exports = (app) => {
   app.context.validations = {};
   organizations(app);
   sessions(app);
-
-  // products(app);
+  products(app);
 };

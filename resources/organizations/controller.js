@@ -45,8 +45,13 @@ const logout = async ({ ctx }) => {
   ctx.response.status = NO_CONTENT;
 };
 
+const fetchMe = async ({ ctx }) => {
+  ctx.body = ctx.state.organization;
+};
+
 exports.controller = {
   create,
   login,
   logout,
+  fetchMe,
 };

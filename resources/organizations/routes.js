@@ -36,5 +36,16 @@ module.exports = (app) => {
     jwt,
   });
 
+  /**
+   * get me
+   */
+  initializeRoute(router, {
+    method: "get",
+    slug: "me",
+    permission: permissions.fetchMe,
+    controller: controller.fetchMe,
+    jwt,
+  });
+
   app.use(router.routes()).use(router.allowedMethods());
 };

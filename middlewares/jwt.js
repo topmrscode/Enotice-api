@@ -1,6 +1,5 @@
 const jwt = require("koa-jwt");
 
-const jsonwebtoken = require("jsonwebtoken");
 const { Organization } = require("../resources/organizations/model");
 const { Session } = require("../resources/sessions/model");
 const secret = process.env.JWT_SECRET_TOKEN;
