@@ -29,7 +29,7 @@ module.exports = (app) => {
    * Logout current organization
    */
   initializeRoute(router, {
-    method: "post",
+    method: "get",
     slug: "logout",
     permission: permissions.logout,
     controller: controller.logout,

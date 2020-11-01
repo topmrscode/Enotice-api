@@ -11,6 +11,7 @@ module.exports = () => async (ctx, next) => {
   if (authorizationToken && authorizationToken[0] === "Bearer") {
     token = authorizationToken[1];
   }
+
   const session = await Session.findOne({ _id: token });
   if (!session) {
     return next();
