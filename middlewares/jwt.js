@@ -11,13 +11,14 @@ module.exports = () => async (ctx, next) => {
   if (authorizationToken && authorizationToken[0] === "Bearer") {
     token = authorizationToken[1];
   }
-  const session = await Session.findById(token);
+  const session = await Session.findOne({ _id: token });
   if (!session) {
     return next();
   }
   ctx.state.token = token;
-
-  ctx.state.organization = await Organization.findById(session.organizationId);
+  ctx.state.organization = await Organization.findOne({
+    _id: session.organizationId,
+  });
   ctx.state.jwt = jwt({ secret });
 
   return next();

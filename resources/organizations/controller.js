@@ -17,7 +17,7 @@ const create = async ({ ctx }) => {
 
   await organization.save();
   ctx.response.status = CREATED;
-  ctx.body = organization;
+  ctx.body = { data: organization, error: null };
 };
 
 const login = async ({ ctx }) => {
@@ -33,7 +33,10 @@ const login = async ({ ctx }) => {
   });
   await session.save();
 
-  ctx.body = { ...requestedOrganization.toObject(), token: session._id };
+  ctx.body = {
+    data: { ...requestedOrganization.toObject(), token: session._id },
+    error: null,
+  };
 };
 
 const logout = async ({ ctx }) => {
@@ -42,11 +45,15 @@ const logout = async ({ ctx }) => {
     models: { Session },
   } = ctx;
   await Session.deleteOne({ _id: token });
+
   ctx.response.status = NO_CONTENT;
 };
 
 const fetchMe = async ({ ctx }) => {
-  ctx.body = ctx.state.organization;
+  ctx.body = {
+    data: ctx.state.organization,
+    error: null,
+  };
 };
 
 exports.controller = {

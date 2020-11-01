@@ -1,4 +1,5 @@
 const { CREATED, NO_CONTENT } = require("http-status-codes");
+const { qsDecoder } = require("../../helpers/qsDecoder");
 
 const create = async ({ ctx }) => {
   const {
@@ -18,7 +19,7 @@ const create = async ({ ctx }) => {
 
   await product.save();
   ctx.response.status = CREATED;
-  ctx.body = product;
+  ctx.body = { data: product, error: null };
 };
 
 const update = async ({ ctx }) => {
@@ -31,8 +32,9 @@ const update = async ({ ctx }) => {
     ...requestedProduct,
     ...body,
   });
+  const updatedProduct = await requestedProduct.save();
 
-  ctx.body = await requestedProduct.save();
+  ctx.body = { data: updatedProduct, error: null };
 };
 
 const remove = async ({ ctx }) => {
@@ -53,17 +55,31 @@ const findOne = async ({ ctx }) => {
   let product = requestedProduct;
   product = await product.populate({ path: "organizationId" }).execPopulate();
 
-  ctx.body = product;
+  ctx.body = { data: product, error: null };
 };
 
 const list = async ({ ctx }) => {
   const {
+    request: { query },
     state: { organization },
     models: { Product },
   } = ctx;
 
-  const products = await Product.find({ organizationId: organization._id });
-  ctx.body = products;
+  const { offset = 0, limit = 0 } = qsDecoder(query, {
+    offset: Number,
+    limit: Number,
+  });
+
+  const sort = { createdAt: -1 };
+  const products = await Product.find({ organizationId: organization._id })
+    .sort(sort)
+    .skip(offset)
+    .limit(limit);
+
+  const total = await Product.countDocuments({
+    organizationId: organization._id,
+  });
+  ctx.body = { data: { products, limit, offset, total }, error: null };
 };
 
 const findOnePublic = async ({ ctx }) => {
