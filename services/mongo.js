@@ -8,10 +8,12 @@ const connect = () => {
   const DB_PASSWORD = process.env.DB_PASSWORD;
 
   let DB_AUTH_STRING = "";
+  let DB_PROTOCOL = "mongodb://";
   if (DB_USER) {
     DB_AUTH_STRING = `${DB_USER}:${DB_PASSWORD}@`;
+    DB_PROTOCOL = "mongodb+srv://";
   }
-  const connectionString = `mongodb://${DB_AUTH_STRING}${DB_HOST}${DB_PORT}/${DB_NAME}`;
+  const connectionString = `${DB_PROTOCOL}${DB_AUTH_STRING}${DB_HOST}${DB_PORT}/${DB_NAME}`;
   const mongoOptions = { useNewUrlParser: true, useUnifiedTopology: true };
   return mongoose.connect(connectionString, mongoOptions);
 };
