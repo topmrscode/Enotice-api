@@ -2,7 +2,7 @@ const yup = require("yup");
 
 const { BAD_REQUEST, NOT_FOUND, getStatusText } = require("http-status-codes");
 const {
-  ERROR_FILE_URL_IS_REQUIRED,
+  ERROR_FILE_IS_REQUIRED,
   ERROR_TITLE_IS_REQUIRED,
   ERROR_VIDEO_ID_IS_REQUIRED,
 } = require("./helpers");
@@ -11,22 +11,24 @@ const create = async ({ ctx }) => {
   const {
     request: { body: values },
   } = ctx;
-
   await yup
     .object({
       reference: yup.string().required(ERROR_TITLE_IS_REQUIRED),
       videoId: yup.string().required(ERROR_VIDEO_ID_IS_REQUIRED),
-      fileUrl: yup.string().required(ERROR_FILE_URL_IS_REQUIRED),
     })
     .validate(values, { abortEarly: false })
     .catch((err) => {
       ctx.throw(BAD_REQUEST, err.message);
     });
+
+  if (values.file == "null") {
+    return ctx.throw(BAD_REQUEST, ERROR_FILE_IS_REQUIRED);
+  }
 };
 
 const update = async ({ ctx }) => {
   const {
-    request: { body: values },
+    request: { body: values, files },
     params: { id },
     models: { Product },
   } = ctx;
@@ -34,8 +36,7 @@ const update = async ({ ctx }) => {
   await yup
     .object({
       reference: yup.string().required(ERROR_TITLE_IS_REQUIRED),
-      videoId: yup.string().required(ERROR_VIDEO_IS_REQUIRED),
-      fileUrl: yup.string().required(ERROR_FILE_IS_REQUIRED),
+      videoId: yup.string().required(ERROR_VIDEO_ID_IS_REQUIRED),
     })
     .validate(values, { abortEarly: false })
     .catch((err) => {
@@ -46,6 +47,7 @@ const update = async ({ ctx }) => {
   if (!product) {
     return ctx.throw(NOT_FOUND, getStatusText(NOT_FOUND));
   }
+
   ctx.state.requestedProduct = product;
 };
 

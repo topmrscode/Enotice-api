@@ -9,7 +9,7 @@ const productSchema = new Schema(
   {
     reference: { type: String },
     videoId: { type: String },
-    fileUrl: { type: String },
+    file: { type: String },
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",

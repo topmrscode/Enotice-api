@@ -1,19 +1,24 @@
 const { CREATED, NO_CONTENT } = require("http-status-codes");
 const { qsDecoder } = require("../../helpers/qsDecoder");
+const { splitFile, splitVideoId } = require("./helpers");
 
 const create = async ({ ctx }) => {
   const {
     request: {
-      body: { reference, videoId, fileUrl },
+      body: { reference, videoId },
+      files,
     },
     state: { organization },
     models: { Product },
   } = ctx;
+  const newVideoId = splitVideoId(videoId);
+  const host = ctx.request.headers.host;
+  const file = splitFile({ host, files });
 
   const product = new Product({
     reference,
-    videoId,
-    fileUrl,
+    videoId: newVideoId,
+    file: file,
     organizationId: organization._id,
   });
 
@@ -24,16 +29,23 @@ const create = async ({ ctx }) => {
 
 const update = async ({ ctx }) => {
   const {
-    request: { body },
+    request: { body, files },
     state: { requestedProduct },
   } = ctx;
+
+  const newVideoId = splitVideoId(body.videoId);
+  const host = ctx.request.headers.host;
+  const file =
+    body.file == "null" ? requestedProduct.file : splitFile({ host, files });
 
   requestedProduct.set({
     ...requestedProduct,
     ...body,
+    videoId: newVideoId,
+    file,
   });
-  const updatedProduct = await requestedProduct.save();
 
+  const updatedProduct = await requestedProduct.save();
   ctx.body = { data: updatedProduct, error: null };
 };
 
@@ -83,7 +95,7 @@ const list = async ({ ctx }) => {
 };
 
 const findOnePublic = async ({ ctx }) => {
-  ctx.body = ctx.state.requestedProduct;
+  ctx.body = { data: ctx.state.requestedProduct, error: null };
 };
 
 exports.controller = {
